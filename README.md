@@ -10,7 +10,7 @@ Every pull request appreciated. Note that the master branch is used for the curr
 
 ## Demos
 
-A demo of different configurations can be found [here](http://davidstutz.github.com/bootstrap-multiselect/).
+A demo of the bootstrap 3 version can be found [here](http://davidstutz.github.com/bootstrap-multiselect/).
 
 **Note**: The demo page is based on JQuery 2 - so for IE 6,7 and 8 the plugin will not work properly, see compatibility below.
 
