@@ -1,5 +1,5 @@
 /**
- * bootstrap-multiselect.js 1.0.0
+ * bootstrap-multiselect.js
  * https://github.com/davidstutz/bootstrap-multiselect
  *
  * Copyright 2012, 2013 David Stutz
@@ -18,10 +18,11 @@
                 if (!ms) {
                     $(element).multiselect(ko.utils.unwrapObservable(valueAccessor()));
                 }
-                else
-                if (allBindingsAccessor().options && allBindingsAccessor().options().length !== ms.originalOptions.length) {
-                    ms.updateOriginalOptions();
-                    $(element).multiselect('rebuild');
+                else {
+                    if (allBindingsAccessor().options && allBindingsAccessor().options().length !== ms.originalOptions.length) {
+                        ms.updateOriginalOptions();
+                        $(element).multiselect('rebuild');
+                    }
                 }
             }
         };
@@ -92,7 +93,7 @@
                 }
                 else
                 if (options.length > 3) {
-                    return options.length + ' ' + this.nonSelectedText + ' <b class="caret"></b>';
+                    return options.length + ' ' + this.nSelectedText + ' <b class="caret"></b>';
                 }
                 else {
                     var selected = '';
@@ -175,6 +176,21 @@
             }
         },
 
+        // Create optgroup.
+        createOptgroup: function(group) {
+            var groupName = $(group).prop('label');
+
+            // Add a header for the group.
+            var $li = $('<li><label class="multiselect-group"></label></li>');
+            $('label', $li).text(groupName);
+            $('.multiselect-container', this.$container).append($li);
+
+            // Add the options of the group.
+            $('option', group).each($.proxy(function(index, element) {
+                this.createOptionValue(element);
+            }, this));
+        },
+
         toggleActiveState: function(shouldBeActive) {
             if (this.$select.attr('disabled') == undefined) {
                 $('button.multiselect.dropdown-toggle', this.$container).removeClass('disabled');
@@ -202,25 +218,10 @@
                 // Support optgroups and options without a group simultaneously.
                 var tag = $(element).prop('tagName').toLowerCase();
                 if (tag == 'optgroup') {
-                    var group = element;
-                    var groupName = $(group).prop('label');
-
-                    // Add a header for the group.
-                    var $li = $('<li><label class="multiselect-group"></label></li>');
-                    $('label', $li).text(groupName);
-                    $('.multiselect-container', this.$container).append($li);
-
-                    // Add the options of the group.
-                    $('option', group).each($.proxy(function(index, element) {
-                        this.createOptionValue(element);
-                    }, this));
+                    this.createOptgroup(element);
                 }
-                else
-                if (tag == 'option') {
+                else if (tag == 'option') {
                     this.createOptionValue(element);
-                }
-                else {
-                    // Ignore illegal tags.
                 }
             }, this));
 
@@ -319,12 +320,10 @@
                         index--;
                     }
                     // Navigate down.
-                    else
-                    if (event.keyCode == 40 && index < $items.length - 1) {
+                    else if (event.keyCode == 40 && index < $items.length - 1) {
                         index++;
                     }
-                    else
-                    if (!~index) {
+                    else if (!~index) {
                         index = 0;
                     }
 
