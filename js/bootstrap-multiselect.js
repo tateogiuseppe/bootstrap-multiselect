@@ -7,7 +7,9 @@
  * Dual licensed under the BSD-3-Clause and the Apache License, Version 2.0.
  * See the README.
  */
-!function($) {"use strict";// jshint ;_;
+!function($) {
+    
+    "use strict";// jshint ;_;
 
     if ( typeof ko != 'undefined' && ko.bindingHandlers && !ko.bindingHandlers.multiselect) {
         ko.bindingHandlers.multiselect = {

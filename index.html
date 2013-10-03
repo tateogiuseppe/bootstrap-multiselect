@@ -25,23 +25,22 @@
 				</p>
 			</div>
 		</div>
+        
 	    <div class="container">
 	        <script>
 	            $('.dropdown input, .dropdown label').click(function (event) {
 	                event.stopPropagation();
 	            });
         	</script>
+            
 			<p class="alert alert-info">
 				<b>Note:</b> The option names may have changed due to the latest updates.
 			</p>
+            
 			<div class="page-header">
 				<h1>Examples</h1>
 			</div>
-			<ul class="dropdown-menu">
-				<li><a href="">1</a></li>
-				<li><a href="">2</a></li>
-				<li><a href="">3</a></li>
-			</ul>
+			
 			<script type="text/javascript">
 			    $(document).ready(function() {
 			        window.prettyPrint() && prettyPrint();
@@ -860,16 +859,6 @@ $(&quot;#multiselect&quot;).multiselect('dataprovider', data);
 			                }
 			            }
 			        });
-			        
-			        $('#example30-select-all').on('click', function() {
-			        	$('#example30').multiselect('select', 'multiselect-all');
-			        });
-			        
-			        $('#example30-deselect-all').on('click', function() {
-			        	$('#example30').multiselect('deselect', 'multiselect-all');
-			        });
-			        
-			        $('#example30').multiselect();
 			    });
 			</script>
 			<table class="table table-striped">
