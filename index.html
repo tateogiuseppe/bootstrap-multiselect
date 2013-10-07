@@ -859,6 +859,44 @@ $(&quot;#multiselect&quot;).multiselect('dataprovider', data);
 			                }
 			            }
 			        });
+                    
+                    var firstConfigurationSet = {
+                        includeSelectAllOption: false,
+                        enableFiltering: false,
+                        enableCasInsensitiveFiltering: false
+                    };
+                    var secondConfigurationSet = {
+                        includeSelectAllOption: true,
+                        enableFiltering: true,
+                        enableCasInsensitiveFiltering: true
+                    };
+                    
+                    var set = 1;
+                    $('#example33').multiselect(firstConfigurationSet);
+                    
+                    function rebuildMultiselect(options) {
+                        $('#example33').multiselect('setOptions', options);
+                        $('#example33').multiselect('rebuild');
+                    }
+                    
+                    $('#example33-configuration-set').on('click', function(event) {
+                        switch (set) {
+                            case 2:
+                                rebuildMultiselect(firstConfigurationSet);
+                                
+                                $(this).text('Configuration Set 2');
+                                set = 1;
+                                break;
+                            case 1:
+                            default:
+                                rebuildMultiselect(secondConfigurationSet);
+                                
+                                $(this).text('Configuration Set 1');
+                                set = 2;
+                                break;
+                            
+                        }
+                    });
 			    });
 			</script>
 			<table class="table table-striped">
@@ -1003,6 +1041,54 @@ $(&quot;#multiselect&quot;).multiselect('dataprovider', data);
 							</pre>
 						</td>
 					</tr>
+                    <tr>
+                        <td>
+                            <div class="btn-group">
+                                <select id="example33" multiple="multiple">
+                                    <option value="cheese">Cheese</option>
+                                    <option value="tomatoes">Tomatoes</option>
+                                    <option value="mozarella">Mozzarella</option>
+                                    <option value="mushrooms">Mushrooms</option>
+                                    <option value="pepperoni">Pepperoni</option>
+                                    <option value="onions">Onions</option>
+                                </select>
+                                <button id="example33-configuration-set" class="btn btn-primary">Configuration Set 2</button>
+                            </div>
+                        </td>
+                        <td>
+                            <pre class="linenums prettyprint">
+&lt;script type=&quot;text/javascript&quot;&gt;
+  $(document).ready(function() {
+    var set = 1;
+    $('#example33').multiselect(firstConfigurationSet);
+                    
+    function rebuildMultiselect(options) {
+      $('#example33').multiselect('setOptions', options);
+      $('#example33').multiselect('rebuild');
+    }
+
+    $('#example33-configuration-set').on('click', function(event) {
+      switch (set) {
+        case 2:
+          rebuildMultiselect(firstConfigurationSet);
+
+          $(this).text('Configuration Set 2');
+          set = 1;
+          break;
+        case 1:
+        default:
+          rebuildMultiselect(secondConfigurationSet);
+
+          $(this).text('Configuration Set 1');
+          set = 2;
+          break;
+      }
+    });
+  });
+&lt;/script&gt;
+                            </pre>
+                        </td>
+                    </tr>
 				</tbody>
 			</table>
 			
