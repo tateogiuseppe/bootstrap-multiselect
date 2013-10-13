@@ -8,13 +8,11 @@ Bootstrap Multiselect is a JQuery based plugin to provide an intuitive user inte
 
 Every pull request appreciated. Note that the master branch is used for the current bootstrap version. There is an additional branch for bootstrap 2.3.x.
 
-## Demos
+## Documentation and Demos
 
-A demo of the bootstrap 3 version can be found [here](http://davidstutz.github.com/bootstrap-multiselect/).
+Documentation of the bootstrap 3 version including several demos can be found [here](http://davidstutz.github.com/bootstrap-multiselect/). For documentation of the bootstrap 2.3.x version see `index.html` when cloning or downloading this branch.
 
 **Note**: The demo page is based on JQuery 2 - so for IE 6,7 and 8 the plugin will not work properly, see compatibility below.
-
-For Knockout JS integration see some examples [here](http://davidstutz.github.io/bootstrap-multiselect/knockout-examples.html).
 
 ## Compatibility
 
