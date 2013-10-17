@@ -137,11 +137,11 @@
             this.$button = $(this.templates.button).addClass(this.options.buttonClass);
             
             // Adopt active state.
-            if (this.$select.attr('disabled') == undefined) {
-                this.$button.removeClass('disabled');
+            if (this.$select.prop('disabled')) {
+                this.disable();
             }
             else {
-                this.$button.addClass('disabled');
+                this.enable();
             }
            
             // Manually add button width if set.
@@ -560,7 +560,21 @@
             this.$select.html(optionDOM);
             this.rebuild();
         },
+        
+        // Enable button.
+        enable: function() {
+            this.$select.prop('disabled', false);
+            this.$button.prop('disabled', false)
+                .removeClass('disabled');
+        },
 
+        // Disable button.
+        disable: function() {
+            this.$select.prop('disabled', true);
+            this.$button.prop('disabled', true)
+                .addClass('disabled');
+        },
+        
         // Set options.
         setOptions: function(options) {
             this.options = this.mergeOptions(options);
