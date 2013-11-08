@@ -40,6 +40,8 @@
         
         this.options.multiple = this.$select.attr('multiple') == "multiple";
         this.options.onChange = $.proxy(this.options.onChange, this);
+        this.options.onDropdownShow = $.proxy(this.options.onDropdownShow, this);
+        this.options.onDropdownHide = $.proxy(this.options.onDropdownHide, this);
         
         // Build select all if enabled.
         this.buildContainer();
@@ -58,14 +60,14 @@
         // Default options.
         defaults: {
             // Default text function will either print 'None selected' in case no
-            // option is selected, or a list of the selected options up to a length of 3 selected options.
+            // option is selected, or a list of the selected options up to a length of 3 selected options by default.
             // If more than 3 options are selected, the number of selected options is printed.
             buttonText: function(options, select) {
                 if (options.length == 0) {
                     return this.nonSelectedText + ' <b class="caret"></b>';
                 }
                 else {
-                    if (options.length > 3) {
+                    if (options.length > this.numberDisplayed) {
                         return options.length + ' ' + this.nSelectedText + ' <b class="caret"></b>';
                     }
                     else {
@@ -100,6 +102,14 @@
             onChange : function(option, checked) {
 
             },
+            // Triggered immediately when dropdown shown
+            onDropdownShow: function(event) {
+
+            },
+            // Triggered immediately when dropdown hidden
+            onDropdownHide: function(event) {
+
+            },
             buttonClass: 'btn',
             dropRight: false,
             selectedClass: 'active',
@@ -118,7 +128,8 @@
             filterBehavior: 'text',
             preventInputChangeEvent: false,
             nonSelectedText: 'None selected',
-            nSelectedText: 'selected'
+            nSelectedText: 'selected',
+            numberDisplayed: 3
         },
         
         // Templates.
@@ -134,6 +145,8 @@
         
         buildContainer: function() {
             this.$container = $(this.options.buttonContainer);
+            this.$container.on('show.bs.dropdown', this.options.onDropdownShow);
+            this.$container.on('hide.bs.dropdown', this.options.onDropdownHide)
         },
         
         buildButton: function() {
