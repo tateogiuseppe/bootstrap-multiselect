@@ -1259,13 +1259,11 @@ $(&quot;#multiselect&quot;).multiselect('dataprovider', data);
                     
                     var firstConfigurationSet = {
                         includeSelectAllOption: false,
-                        enableFiltering: false,
-                        enableCasInsensitiveFiltering: false
+                        enableFiltering: false
                     };
                     var secondConfigurationSet = {
                         includeSelectAllOption: true,
-                        enableFiltering: true,
-                        enableCasInsensitiveFiltering: true
+                        enableFiltering: true
                     };
                     
                     var set = 1;
@@ -1601,6 +1599,15 @@ $(&quot;#multiselect&quot;).multiselect('dataprovider', data);
                             <pre class="linenums prettyprint">
 &lt;script type=&quot;text/javascript&quot;&gt;
   $(document).ready(function() {
+    var firstConfigurationSet = {
+      includeSelectAllOption: false,
+      enableFiltering: false
+    };
+    var secondConfigurationSet = {
+      includeSelectAllOption: true,
+      enableFiltering: true
+    };
+
     var set = 1;
     $('#example33').multiselect(firstConfigurationSet);
                     
