@@ -11,7 +11,7 @@
     
     "use strict";// jshint ;_;
 
-    if (typeof ko != 'undefined' && ko.bindingHandlers && !ko.bindingHandlers.multiselect) {
+    if (typeof ko !== 'undefined' && ko.bindingHandlers && !ko.bindingHandlers.multiselect) {
         ko.bindingHandlers.multiselect = {
             init : function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {},
             update : function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
@@ -38,7 +38,7 @@
         this.query = '';
         this.searchTimeout = null;
         
-        this.options.multiple = this.$select.attr('multiple') == "multiple";
+        this.options.multiple = this.$select.attr('multiple') === "multiple";
         this.options.onChange = $.proxy(this.options.onChange, this);
         this.options.onDropdownShow = $.proxy(this.options.onDropdownShow, this);
         this.options.onDropdownHide = $.proxy(this.options.onDropdownHide, this);
@@ -63,7 +63,7 @@
             // option is selected, or a list of the selected options up to a length of 3 selected options by default.
             // If more than 3 options are selected, the number of selected options is printed.
             buttonText: function(options, select) {
-                if (options.length == 0) {
+                if (options.length === 0) {
                     return this.nonSelectedText + ' <b class="caret"></b>';
                 }
                 else {
@@ -83,7 +83,7 @@
             },
             // Like the buttonText option to update the title of the button.
             buttonTitle: function(options, select) {
-                if (options.length == 0) {
+                if (options.length === 0) {
                     return this.nonSelectedText;
                 }
                 else {
@@ -146,7 +146,7 @@
         buildContainer: function() {
             this.$container = $(this.options.buttonContainer);
             this.$container.on('show.bs.dropdown', this.options.onDropdownShow);
-            this.$container.on('hide.bs.dropdown', this.options.onDropdownHide)
+            this.$container.on('hide.bs.dropdown', this.options.onDropdownHide);
         },
         
         buildButton: function() {
@@ -174,7 +174,7 @@
                 this.$button.attr('tabindex', tabindex);
             }
            
-            this.$container.prepend(this.$button)
+            this.$container.prepend(this.$button);
         },
         
         // Build dropdown container ul.
@@ -197,7 +197,7 @@
                 });
             }
             
-            this.$container.append(this.$ul)
+            this.$container.append(this.$ul);
         },
         
         // Build the dropdown and bind event handling.
@@ -206,10 +206,10 @@
             this.$select.children().each($.proxy(function(index, element) {
                 // Support optgroups and options without a group simultaneously.
                 var tag = $(element).prop('tagName').toLowerCase();
-                if (tag == 'optgroup') {
+                if (tag === 'optgroup') {
                     this.createOptgroup(element);
                 }
-                else if (tag == 'option') {
+                else if (tag === 'option') {
                     this.createOptionValue(element);
                 }
                 // Other illegal tags will be ignored.
@@ -218,15 +218,17 @@
             // Bind the change event on the dropdown elements.
             $('li input', this.$ul).on('change', $.proxy(function(event) {
                 var checked = $(event.target).prop('checked') || false;
-                var isSelectAllOption = $(event.target).val() == this.options.selectAllValue;
+                var isSelectAllOption = $(event.target).val() === this.options.selectAllValue;
 
                 // Apply or unapply the configured selected class.
                 if (this.options.selectedClass) {
                     if (checked) {
-                        $(event.target).parents('li').addClass(this.options.selectedClass);
+                        $(event.target).parents('li')
+                            .addClass(this.options.selectedClass);
                     }
                     else {
-                        $(event.target).parents('li').removeClass(this.options.selectedClass);
+                        $(event.target).parents('li')
+                            .removeClass(this.options.selectedClass);
                     }
                 }
                 
@@ -237,11 +239,24 @@
                 var $optionsNotThis = $('option', this.$select).not($option);
                 var $checkboxesNotThis = $('input', this.$container).not($(event.target));
 
-                // Toggle all options if the select all option was changed.
                 if (isSelectAllOption) {
-                    $checkboxesNotThis.filter(function() {
-                        return $(this).is(':checked') != checked;
-                    }).trigger('click');
+                    if (this.$select[0][0].value === this.options.selectAllValue) {
+                        var values = [];
+                        var options = $('option[value!="' + this.options.selectAllValue + '"]', this.$select);
+                        for (var i = 0; i < options.length; i++) {
+                            // Additionally check whether the option is visible within the dropcown.
+                            if (options[i].value !== this.options.selectAllValue && this.getInputByValue(options[i].value).is(':visible')) {
+                                values.push(options[i].value);
+                            }
+                        }
+                        
+                        if (checked) {
+                            this.select(values);
+                        }
+                        else {
+                            this.deselect(values);
+                        }
+                    }
                 }
 
                 if (checked) {
@@ -254,23 +269,27 @@
                     else {
                         // Unselect all other options and corresponding checkboxes.
                         if (this.options.selectedClass) {
-                            $($checkboxesNotThis).parents('li').removeClass(this.options.selectedClass);
+                            $($checkboxesNotThis).parents('li')
+                                .removeClass(this.options.selectedClass);
                         }
 
                         $($checkboxesNotThis).prop('checked', false);
-                        $optionsNotThis.removeAttr('selected').prop('selected', false);
+                        $optionsNotThis.removeAttr('selected')
+                            .prop('selected', false);
 
                         // It's a single selection, so close.
                         this.$button.click();
                     }
 
-                    if (this.options.selectedClass == "active") {
-                        $optionsNotThis.parents("a").css("outline", "");
+                    if (this.options.selectedClass === "active") {
+                        $optionsNotThis.parents("a")
+                            .css("outline", "");
                     }
                 }
                 else {
                     // Unselect option.
-                    $option.removeAttr('selected').prop('selected', false);
+                    $option.removeAttr('selected')
+                        .prop('selected', false);
                 }
 
                 this.$select.change();
@@ -292,7 +311,7 @@
                 if ($('input[type="text"]', this.$container).is(':focus')) {
                     return;
                 }
-                if ((event.keyCode == 9 || event.keyCode == 27) && this.$container.hasClass('open')) {
+                if ((event.keyCode === 9 || event.keyCode === 27) && this.$container.hasClass('open')) {
                     // Close on tab or escape.
                     this.$button.click();
                 }
@@ -306,11 +325,11 @@
                     var index = $items.index($items.filter(':focus'));
 
                     // Navigation up.
-                    if (event.keyCode == 38 && index > 0) {
+                    if (event.keyCode === 38 && index > 0) {
                         index--;
                     }
                     // Navigate down.
-                    else if (event.keyCode == 40 && index < $items.length - 1) {
+                    else if (event.keyCode === 40 && index < $items.length - 1) {
                         index++;
                     }
                     else if (!~index) {
@@ -320,7 +339,7 @@
                     var $current = $items.eq(index);
                     $current.focus();
 
-                    if (event.keyCode == 32 || event.keyCode == 13) {
+                    if (event.keyCode === 32 || event.keyCode === 13) {
                         var $checkbox = $current.find('input');
 
                         $checkbox.prop("checked", !$checkbox.prop("checked"));
@@ -352,8 +371,9 @@
             var $checkbox = $('input', $li);
             $checkbox.val(value);
 
-            if (value == this.options.selectAllValue) {
-                $checkbox.parent().parent().addClass('multiselect-all');
+            if (value === this.options.selectAllValue) {
+                $checkbox.parent().parent()
+                    .addClass('multiselect-all');
             }
 
             $('label', $li).append(" " + label);
@@ -361,13 +381,17 @@
             this.$ul.append($li);
 
             if ($(element).is(':disabled')) {
-                $checkbox.attr('disabled', 'disabled').prop('disabled', true).parents('li').addClass('disabled');
+                $checkbox.attr('disabled', 'disabled')
+                    .prop('disabled', true)
+                    .parents('li')
+                    .addClass('disabled');
             }
 
             $checkbox.prop('checked', selected);
 
             if (selected && this.options.selectedClass) {
-                $checkbox.parents('li').addClass(this.options.selectedClass);
+                $checkbox.parents('li')
+                    .addClass(this.options.selectedClass);
             }
         },
 
@@ -389,7 +413,8 @@
         
         // Add the select all option to the select.
         buildSelectAll: function() {
-            var alreadyHasSelectAll = this.$select[0][0] ? this.$select[0][0].value == this.options.selectAllValue : false;
+            var alreadyHasSelectAll = this.$select[0][0] ? this.$select[0][0].value === this.options.selectAllValue : false;
+            
             // If options.includeSelectAllOption === true, add the include all checkbox.
             if (this.options.includeSelectAllOption && this.options.multiple && !alreadyHasSelectAll) {
                 this.$select.prepend('<option value="' + this.options.selectAllValue + '">' + this.options.selectAllText + '</option>');
@@ -402,6 +427,7 @@
             // Build filter if filtering OR case insensitive filtering is enabled and the number of options exceeds (or equals) enableFilterLength.
             if (this.options.enableFiltering || this.options.enableCaseInsensitiveFiltering) {
                 var enableFilterLength = Math.max(this.options.enableFiltering, this.options.enableCaseInsensitiveFiltering);
+                
                 if (this.$select.find('option').length >= enableFilterLength) {
                     
                     this.$filter = $(this.templates.filter);
@@ -416,44 +442,45 @@
 
                         this.searchTimeout = this.asyncFunction($.proxy(function() {
 
-                            if (this.query != event.target.value) {
+                            if (this.query !== event.target.value) {
                                 this.query = event.target.value;
 
                                 $.each($('li', this.$ul), $.proxy(function(index, element) {
                                     var value = $('input', element).val();
-                                    if (value != this.options.selectAllValue) {
-                                        var text = $('label', element).text();
-                                        var value = $('input', element).val();
-                                        if (value && text && value != this.options.selectAllValue) {
-                                            // by default lets assume that element is not
-                                            // interesting for this search
-                                            var showElement = false;
+                                    var text = $('label', element).text();
+                                    
+                                    if (value !== this.options.selectAllValue) {
+                                        
+                                        // by default lets assume that element is not
+                                        // interesting for this search
+                                        var showElement = false;
 
-                                            var filterCandidate = '';
-                                            if ((this.options.filterBehavior == 'text' || this.options.filterBehavior == 'both')) {
-                                                filterCandidate = text;
-                                            }
-                                            if ((this.options.filterBehavior == 'value' || this.options.filterBehavior == 'both')) {
-                                                filterCandidate = value;
-                                            }
+                                        var filterCandidate = '';
+                                        if ((this.options.filterBehavior === 'text' || this.options.filterBehavior === 'both')) {
+                                            filterCandidate = text;
+                                        }
+                                        if ((this.options.filterBehavior === 'value' || this.options.filterBehavior === 'both')) {
+                                            filterCandidate = value;
+                                        }
 
-                                            if (this.options.enableCaseInsensitiveFiltering && filterCandidate.toLowerCase().indexOf(this.query.toLowerCase()) > -1) {
-                                                showElement = true;
-                                            }
-                                            else if (filterCandidate.indexOf(this.query) > -1) {
-                                                showElement = true;
-                                            }
+                                        if (this.options.enableCaseInsensitiveFiltering && filterCandidate.toLowerCase().indexOf(this.query.toLowerCase()) > -1) {
+                                            showElement = true;
+                                        }
+                                        else if (filterCandidate.indexOf(this.query) > -1) {
+                                            showElement = true;
+                                        }
 
-                                            if (showElement) {
-                                                $(element).show();
-                                            }
-                                            else {
-                                                $(element).hide();
-                                            }
+                                        if (showElement) {
+                                            $(element).show();
+                                        }
+                                        else {
+                                            $(element).hide();
                                         }
                                     }
                                 }, this));
                             }
+                            
+                            // TODO: check whether select all option needs to be updated.
                         }, this), 300, this);
                     }, this));
                 }
@@ -470,29 +497,35 @@
         refresh: function() {
             $('option', this.$select).each($.proxy(function(index, element) {
                 var $input = $('li input', this.$ul).filter(function() {
-                    return $(this).val() == $(element).val();
+                    return $(this).val() === $(element).val();
                 });
 
                 if ($(element).is(':selected')) {
                     $input.prop('checked', true);
 
                     if (this.options.selectedClass) {
-                        $input.parents('li').addClass(this.options.selectedClass);
+                        $input.parents('li')
+                            .addClass(this.options.selectedClass);
                     }
                 }
                 else {
                     $input.prop('checked', false);
 
                     if (this.options.selectedClass) {
-                        $input.parents('li').removeClass(this.options.selectedClass);
+                        $input.parents('li')
+                            .removeClass(this.options.selectedClass);
                     }
                 }
 
                 if ($(element).is(":disabled")) {
-                    $input.attr('disabled', 'disabled').prop('disabled', true).parents('li').addClass('disabled');
+                    $input.attr('disabled', 'disabled')
+                        .prop('disabled', true).parents('li')
+                        .addClass('disabled');
                 }
                 else {
-                    $input.removeAttr('disabled').prop('disabled', false).parents('li').removeClass('disabled');
+                    $input.removeAttr('disabled')
+                        .prop('disabled', false).parents('li')
+                        .removeClass('disabled');
                 }
             }, this));
 
@@ -506,19 +539,19 @@
             }
             
             for (var i = 0; i < selectValues.length; i++) {
-                
                 var value = selectValues[i];
                 
                 var $option = this.getOptionByValue(value);
                 var $checkbox = this.getInputByValue(value);
 
                 if (this.options.selectedClass) {
-                    $checkbox.parents('li').addClass(this.options.selectedClass);
+                    $checkbox.parents('li')
+                        .addClass(this.options.selectedClass);
                 }
 
                 $checkbox.prop('checked', true);
-
-                $option.prop('selected', true);                
+                $option.prop('selected', true);   
+                
                 this.options.onChange($option, true);
             }
 
@@ -532,19 +565,21 @@
             }
 
             for (var i = 0; i < deselectValues.length; i++) {
-                
                 var value = deselectValues[i];
                 
                 var $option = this.getOptionByValue(value);
                 var $checkbox = this.getInputByValue(value);
 
                 if (this.options.selectedClass) {
-                    $checkbox.parents('li').removeClass(this.options.selectedClass);
+                    $checkbox.parents('li')
+                        .removeClass(this.options.selectedClass);
                 }
 
                 $checkbox.prop('checked', false);
 
-                $option.removeAttr('selected').prop('selected', false);               
+                $option.removeAttr('selected')
+                    .prop('selected', false);     
+            
                 this.options.onChange($option, false);
             }
 
@@ -559,7 +594,7 @@
             $('option[value="' + this.options.selectAllValue + '"]', this.$select).remove();
             
             // Important to distinguish between radios and checkboxes.
-            this.options.multiple = this.$select.attr('multiple') == "multiple";
+            this.options.multiple = this.$select.attr('multiple') === "multiple";
             
             this.buildSelectAll();
             this.buildDropdownOptions();
@@ -624,14 +659,14 @@
         // Get the corresponding option by ts value.
         getOptionByValue: function(value) {
             return $('option', this.$select).filter(function() {
-                return $(this).val() == value;
+                return $(this).val() === value;
             });
         },
         
         // Get an input in the dropdown by its value.
         getInputByValue: function(value) {
             return $('li input', this.$ul).filter(function() {
-                return $(this).val() == value;
+                return $(this).val() === value;
             });
         },
         
@@ -649,7 +684,8 @@
 
     $.fn.multiselect = function(option, parameter) {
         return this.each(function() {
-            var data = $(this).data('multiselect'), options = typeof option == 'object' && option;
+            var data = $(this).data('multiselect');
+            var options = typeof option === 'object' && option;
 
             // Initialize the multiselect.
             if (!data) {
@@ -657,7 +693,7 @@
             }
 
             // Call multiselect method.
-            if ( typeof option == 'string') {
+            if ( typeof option === 'string') {
                 data[option](parameter);
             }
         });

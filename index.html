@@ -188,6 +188,11 @@
 			        });
                     
                     $('#example32').multiselect();
+                    
+                    $('#example39').multiselect({
+                        includeSelectAllOption: true,
+			        	enableCaseInsensitiveFiltering: true
+                    });
 			    });
 			</script>
 			<p>
@@ -548,6 +553,30 @@
 					</td>
 					<td>
 						The buttin will keep the <code>tabindex</code> of the select.
+					</td>
+				</tr>
+                <tr>
+					<td>
+						<select id="example39" multiple="multiple">
+							<option value="lab">Lab Course</option>
+							<option value="proseminar">Proseminar</option>
+							<optgroup label="Mathematics">
+								<option value="analysis">Analysis</option>
+								<option value="algebra">Linear Algebra</option>
+								<option value="discrete">Discrete Mathematics</option>
+								<option value="numerical">Numerical Analysis</option>
+								<option value="probability">Probability Theory</option>
+							</optgroup>
+							<optgroup label="Computer Science">
+								<option value="programming">Introduction to Programming</option>
+								<option value="automata">Automata Theory</option>
+								<option value="complexity">Complexity Theory</option>
+								<option value="software">Software Engineering</option>
+							</optgroup>
+						</select>
+					</td>
+					<td>
+						Using <code>optgroups</code>s with filtering and the select all option.
 					</td>
 				</tr>
 			</table>
