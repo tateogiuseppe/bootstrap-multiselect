@@ -116,7 +116,7 @@
 			        $('#example6').multiselect();
 					
 			        $('.example7').multiselect({
-			            buttonContainer: '<span class="dropdown" />',
+			            buttonContainer: '<span class="dropdown" />'
 			        });
 					
 			        $('#example9').multiselect({
@@ -129,16 +129,17 @@
 			        for (var i = 1; i <= 100; i++) {
 			            $('#example11').append('<option value="' + i + '">Options ' + i + '</option>');
 			        }
+                    
 			        $('#example11').multiselect({
 			            maxHeight: 200
-			        })
+			        });
 					
 			        $('#example13').multiselect();
 					
 			        $('#example14').multiselect({
 			            buttonWidth: '500px',
 			            buttonText: function(options) {
-			                if (options.length == 0) {
+			                if (options.length === 0) {
 			                    return 'None selected <b class="caret"></b>';
 			                }
 			                else {
@@ -1152,7 +1153,8 @@ $(&quot;#multiselect&quot;).multiselect('dataprovider', data);
 			</div>
 			<script type="text/javascript">
  				/**
-				 * Gets whether all the options are selected
+				 * Gets whether all the options are selected.
+                 * 
 				 * @param {jQuery} $el
 				 * @returns {bool}
 				 */
@@ -1167,7 +1169,8 @@ $(&quot;#multiselect&quot;).multiselect('dataprovider', data);
 			    }
 				 
 			    /**
-				 * Selects all the options
+				 * Selects all the options.
+                 * 
 				 * @param {jQuery} $el
 				 * @returns {undefined}
 				 */
@@ -1175,10 +1178,12 @@ $(&quot;#multiselect&quot;).multiselect('dataprovider', data);
 			        $('option', $el).each(function(element) {
 			            $el.multiselect('select', $(this).val());
 			        });
-			        console.log($('option[selected]', $el).length)
+                    
+			        console.log($('option[selected]', $el).length);
 			    }
 			    /**
-				 * Deselects all the options
+				 * Deselects all the options.
+                 * 
 				 * @param {jQuery} $el
 				 * @returns {undefined}
 				 */
@@ -1186,12 +1191,15 @@ $(&quot;#multiselect&quot;).multiselect('dataprovider', data);
 			        $('option', $el).each(function(element) {
 			            $el.multiselect('deselect', $(this).val());
 			        });
-			        console.log($('option[selected]', $el).length)
+                    
+			        console.log($('option[selected]', $el).length);
 			    }
 				 
 			    /**
-				 * Clears all the selected options
+				 * Clears all the selected options.
+                 * 
 				 * @param {jQuery} $el
+                 * @param {jQuery} $btn
 				 * @returns {undefined}
 				 */
 			    function multiselect_toggle($el, $btn) {
@@ -1206,9 +1214,11 @@ $(&quot;#multiselect&quot;).multiselect('dataprovider', data);
 			    }
 				 
 			    $(document).ready(function() {
+                    
 			        $('#example21').multiselect({
 			            buttonContainer: '<span />'
 			        });
+                    
 			        $("#example21-toggle").click(function(e) {
 			            e.preventDefault();
 			            multiselect_toggle($("#example21"), $(this));
@@ -1218,7 +1228,7 @@ $(&quot;#multiselect&quot;).multiselect('dataprovider', data);
 			            buttonClass: 'btn',
 			            buttonWidth: 'auto',
 			            buttonText: function(options) {
-			                if (options.length == 0) {
+			                if (options.length === 0) {
 			                    return 'None selected <b class="caret"></b>';
 			                }
 			                else if (options.length > 6) {
@@ -1234,10 +1244,10 @@ $(&quot;#multiselect&quot;).multiselect('dataprovider', data);
 			                }
 			            },
 			            onChange: function(element, checked) {
-			                if(checked == true) {
+			                if(checked === true) {
 			                    //action taken here if true
 			                }
-			                else if(checked == false) {
+			                else if(checked === false) {
 			                    if(confirm('Do you wish to deselect the element?')) {
 			                        //action taken here
 			                    }
@@ -1333,7 +1343,7 @@ $(&quot;#multiselect&quot;).multiselect('dataprovider', data);
                     var orderCount = 0;
                     $('#example38').multiselect({
                         buttonText: function(options) {
-			                if (options.length == 0) {
+			                if (options.length === 0) {
 			                    return 'None selected <b class="caret"></b>';
 			                }
 			                else if (options.length > 3) {
@@ -1344,10 +1354,10 @@ $(&quot;#multiselect&quot;).multiselect('dataprovider', data);
 			                    options.each(function() {
 			                        selected.push([$(this).text(), $(this).data('order')]);
 			                    });
-                                ;
+                                
                                 selected.sort(function(a, b) {
                                     return a[1] - b[1];
-                                })
+                                });
                                 
                                 var text = '';
                                 for (var i = 0; i < selected.length; i++) {
@@ -1385,6 +1395,19 @@ $(&quot;#multiselect&quot;).multiselect('dataprovider', data);
                         text = text.substring(0, text.length - 2);
                         
                         alert(text);
+                    });
+                    
+                    $('#example40').multiselect({
+                        onChange: function(option, checked) {
+                            var values = [];
+                            $('#example40 option').each(function() {
+                                if ($(this).val() !== option.val()) {
+                                    values.push($(this).val());
+                                }
+                            });
+                            
+                            $('#example40').multiselect('deselect', values);
+                        }
                     });
 			    });
 			</script>
@@ -1724,7 +1747,7 @@ $(&quot;#multiselect&quot;).multiselect('dataprovider', data);
           })
 
           var text = '';
-          for (var i = 0; i < selected.length; i++) {
+          for (var i = 0; i &lt; selected.length; i++) {
             text += selected[i][0] + ', ';
           }
 
@@ -1760,6 +1783,41 @@ $(&quot;#multiselect&quot;).multiselect('dataprovider', data);
 
       alert(text);
     });
+  });
+&lt;/script&gt;
+                            </pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                Simulate single selections using checkboxes. The behavior will be similar to a multiselect with radio buttons.
+                            </p>
+                            <div class="btn-group">
+                                <select id="example40" multiple="multiple">
+                                    <option value="cheese">Cheese</option>
+                                    <option value="tomatoes">Tomatoes</option>
+                                    <option value="mozarella">Mozzarella</option>
+                                    <option value="mushrooms">Mushrooms</option>
+                                    <option value="pepperoni">Pepperoni</option>
+                                    <option value="onions">Onions</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <pre class="linenums prettyprint">
+&lt;script type=&quot;text/javascript&quot;&gt;
+  $('#example40').multiselect({
+    onChange: function(option, checked) {
+      var values = [];
+      $('#example40 option').each(function() {
+        if ($(this).val() !== option.val()) {
+          values.push($(this).val());
+        }
+      });
+      
+      $('#example40').multiselect('deselect', values);
+    }
   });
 &lt;/script&gt;
                             </pre>

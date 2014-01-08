@@ -545,8 +545,6 @@
 
                 $checkbox.prop('checked', true);
                 $option.prop('selected', true);   
-                
-                this.options.onChange($option, true);
             }
 
             this.updateButtonText();
@@ -572,9 +570,7 @@
                 $checkbox.prop('checked', false);
 
                 $option.removeAttr('selected')
-                    .prop('selected', false);     
-            
-                this.options.onChange($option, false);
+                    .prop('selected', false);
             }
 
             this.updateButtonText();
