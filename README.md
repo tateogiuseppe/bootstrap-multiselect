@@ -2,11 +2,13 @@
 
 Bootstrap Multiselect is a JQuery based plugin to provide an intuitive user interface for using select inputs with the multiple attribute present. Instead of a select a bootstrap button will be shown w dropdown menu containing the single options as checkboxes.
 
-Documentation, Examples, FAQ and License: [http://davidstutz.github.io/bootstrap-multiselect/](http://davidstutz.github.io/bootstrap-multiselect/).
+Soon will be released new page and docs of new features:
+-Ajax call
+-minimumInputLength
+-initSelection
+-formatInputTooShort
 
-Bootstrap Multiselect is featured in an article on [tutorialzine](http://tutorialzine.com/): [50 must-Have Plugins for Extending Twitter Bootstrap](http://tutorialzine.com/2013/07/50-must-have-plugins-for-extending-twitter-bootstrap/); on [Bootsnipp](http://bootsnipp.com/)'s [list of Twitter Bootstrap recourses](http://bootsnipp.com/resources); and available on [NuGet](https://www.nuget.org/): [Bootstrap.Multiselect](https://www.nuget.org/packages/Bootstrap.Multiselect/0.9.9).
-
-Also check out [Bootstrap Strength Meter](https://github.com/davidstutz/bootstrap-strength-meter) - a Twitter Bootstrap plugin to visualize password strength using [Password Score](https://github.com/davidstutz/password-score).
+Documentation, Examples, FAQ and License David Stutz @ : [http://davidstutz.github.io/bootstrap-multiselect/](http://davidstutz.github.io/bootstrap-multiselect/).
 
 ![Example of a multiselect.](example.png?raw=true "Example of a multiselect.")
 
@@ -15,6 +17,7 @@ Also check out [Bootstrap Strength Meter](https://github.com/davidstutz/bootstra
 **Apache License, Version 2.0**
 
 Copyright (c) 2012 - 2014 David Stutz
+Copyright (c) 2014 - 2015 Giuseppe Tateo
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
 
@@ -23,6 +26,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 **BSD 3-Clause License**
 
 Copyright (c) 2012 - 2014 David Stutz
+Copyright (c) 2014 - 2015 Giuseppe Tateo
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
