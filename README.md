@@ -3,10 +3,15 @@
 Bootstrap Multiselect is a JQuery based plugin to provide an intuitive user interface for using select inputs with the multiple attribute present. Instead of a select a bootstrap button will be shown w dropdown menu containing the single options as checkboxes.
 
 Soon will be released new page and docs of new features:
+
 -Ajax call
+
 -minimumInputLength
+
 -initSelection
+
 -formatInputTooShort
+
 
 Documentation, Examples, FAQ and License David Stutz @ : [http://davidstutz.github.io/bootstrap-multiselect/](http://davidstutz.github.io/bootstrap-multiselect/).
 
@@ -17,6 +22,7 @@ Documentation, Examples, FAQ and License David Stutz @ : [http://davidstutz.gith
 **Apache License, Version 2.0**
 
 Copyright (c) 2012 - 2014 David Stutz
+
 Copyright (c) 2014 - 2015 Giuseppe Tateo
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -26,6 +32,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 **BSD 3-Clause License**
 
 Copyright (c) 2012 - 2014 David Stutz
+
 Copyright (c) 2014 - 2015 Giuseppe Tateo
 All rights reserved.
 
