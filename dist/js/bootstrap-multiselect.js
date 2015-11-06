@@ -106,13 +106,20 @@
         this.options.onDropdownHide = $.proxy(this.options.onDropdownHide, this);
         this.options.onDropdownShown = $.proxy(this.options.onDropdownShown, this);
         this.options.onDropdownHidden = $.proxy(this.options.onDropdownHidden, this);
-        
+/*[GT]  ++ */
+        this.options.minimumInputLength = this.options.minimumInputLength || 0;
+        this.options.initSelection = ($.isFunction(this.options.initSelection)?$.proxy(this.options.initSelection, this) : function(){});
+/*[GT]  -- */
         // Build select all if enabled.
         this.buildContainer();
         this.buildButton();
         this.buildDropdown();
         this.buildSelectAll();
+/*[GT]  ++ */
+        this.initSelection();
+/*[GT]  -- */
         this.buildDropdownOptions();
+        
         this.buildFilter();
         
         this.updateButtonText();
@@ -172,7 +179,8 @@
                 else {
                     var selected = '';
                     options.each(function () {
-                        selected += $(this).text() + ', ';
+                        selected += $(this).val() + ', '; // [GT] 31/01/2014  mostra solo il value al mouse over
+                        //[GT] 31/01/2014 selected += $(this).text() + ', ';
                     });
                     return selected.substr(0, selected.length - 2);
                 }
@@ -702,12 +710,92 @@
                 $checkbox.prop('checked', false);
             }
         },
+/*[GT]  ++ */
+        /**
+         * Builds ajax the filter.
+         */
+         
+        buildAjaxFilter: function() {
+        	var _this=this;
+        	var opts=this.options;
+	      	this.$filter = $(this.templates.filter);
+	      	
+	      	var query= $.extend({},opts.ajax);
+		      var query=_this.ajax.call(opts.element, query );
+	      	
+          $('input', this.$filter).attr('placeholder', this.options.filterPlaceholder);
+            this.$ul.prepend(this.$filter);
+            this.$filter.val(this.query).on('click', function(event) {
+                event.stopPropagation();
+	        })/* .on('keydown', $.proxy(function(event) { */
+	        .on('keyup', $.proxy(function(event) {
+	        	var self=this;
+	        	var searchEl=$(event.target);
+	        	var inputLength=searchEl.val().length;
+	        	var noResult=$('li.multiselect-no-results',self.$ul);
+	        	if(inputLength >= opts.minimumInputLength){
+	        		noResult.remove();
+		        	//console.log('ajax Call');
+		        	if (self.query !== event.target.value) {
+                self.query = event.target.value;
+			        	
+		           	var term=searchEl.val();
+		           	searchEl.addClass('multiselect-loading');
+		           	if($.isFunction(query)) 
+		           	  query({
+	                    element: opts.element,
+	                    term: term,
+	                    /* matcher: this.opts.matcher,*/
+	                    callback: function (data) {  
+	                    	var elements={}
+	                    	,options=self.getSelected();
+	                    	searchEl.removeClass('multiselect-loading');
+	                    	_.each(options,function(item){
+	                    		var val=$(item).val();
+	                    	  //elements[val]={label : self.options.label(item),value : val, selected: $(item).is(':selected')   };
+	                    	  elements[val]={label : self.options.label(item),value : val, selected: true   };
+	                    	});
+	                    	_.each(data,function(item){
+	                    	  if(!elements[item.value]) elements[item.value]=item;
+	                    	});
+	                    	//console.log(elements);
+	                    	options=[];
+	                    	_.each(elements,function(item,val){
+	                    	  	options.push(item);
+	                    	});
+	                    	
+	                    	self.dataproviderajax(options);
+	                      //console.log($('input.multiselect-search', this.$ul))
+	                      //$('input.multiselect-search', this.$ul).val(self.query).attr('value',self.query);
+	                      //$('input.multiselect-search', this.$ul).focus().setCursorPosition(self.query.length);
+	                    }
+	                });
+	            }
+	        	}else{
+	            
+	            if($('li:not(.multiselect-no-results)',self.$ul).length<=0) {
+	              if(noResult.length<=0) noResult=$("<li class='multiselect-no-results'></li>" ).appendTo(self.$ul);
+	        	    noResult.text(self.formatInputTooShort(event.target.value,opts.minimumInputLength));
+	        	  }
+	        	}
+	        	
+	        }, this));
+        	
+          
+        },
+/*[GT]  -- */
+
 
         /**
          * Builds the filter.
          */
         buildFilter: function() {
-
+/*[GT]  ++ */
+		            var opts=this.options;
+		            if ('ajax' in opts){
+		            	this.buildAjaxFilter();
+		            }else
+/*[GT]  -- */
             // Build filter if filtering OR case insensitive filtering is enabled and the number of options exceeds (or equals) enableFilterLength.
             if (this.options.enableFiltering || this.options.enableCaseInsensitiveFiltering) {
                 var enableFilterLength = Math.max(this.options.enableFiltering, this.options.enableCaseInsensitiveFiltering);
@@ -1244,6 +1332,161 @@
                 callback.apply(self || window, args);
             }, timeout);
         }
+/*[GT]  ++ */
+    ,formatInputTooShort: function (input, min) { var n = min - input.length; return "Please enter " + n + " more character" + (n == 1? "" : "s"); }
+
+    ,mergeResults: function(obj,arr){
+    	var options=new Array();
+    	var elements={};
+    		_.each(obj,function(item){
+      		var val=$(item).val();
+      	  elements[val]={label : self.options.label(item),value : val, selected: $(item).is(':selected')   };
+      	});
+      	_.each(arr,function(item){
+      	  if(!elements[item.value]) {
+      	  	elements[item.value]=item;
+      	  }else if(item.selected)elements[item.value].selected=true;
+      	});
+      	_.each(elements,function(item,val){
+      	  	options.push(item);
+      	});
+    	return options;
+    }
+    /**
+     * initSelection the plugin.
+     * builds the initial value.
+     */
+    ,initSelection: function () {
+	      var data;
+	      var self = this;
+	      this.options.initSelection.call(null, this.element, function(data){
+	      	if (data !== undefined && data !== null) {
+	      		var opts=new Array();
+	      		data.forEach(function (option) {
+	      			option.selected=true;
+	      		});
+            opts=self.mergeResults($('option', self.$select),data);
+	          var optionDOM = "";
+		        opts.forEach(function (option) {
+		            optionDOM += '<option value="' + option.value + '"' + ((option.selected)?' selected="true"':'') + ' >' + option.label + '</option>';
+		        });
+		        self.$select.html(optionDOM);
+	        }
+	      });
+    }
+    
+		/**
+     * Rebuild the plugin.
+     * Rebuilds the dropdown, the filter and the select all option.
+     */
+    ,rebuild4ajax: function() {
+        $('li',this.$ul).remove();
+
+        // Remove select all option in select.
+        $('option[value="' + this.options.selectAllValue + '"]', this.$select).remove();
+
+        // Important to distinguish between radios and checkboxes.
+        this.options.multiple = this.$select.attr('multiple') === "multiple";
+
+        this.buildSelectAll();
+        this.buildDropdownOptions();
+        //this.buildFilter();
+        
+        this.updateButtonText();
+        this.updateSelectAll();
+    }
+    /**
+     * The provided data will be used to build the dropdown.
+     * 
+     * @param {Array} dataproviderajax
+     */
+    ,dataproviderajax: function(data) {
+        var optionDOM = "";
+        data.forEach(function (option) {
+            optionDOM += '<option value="' + option.value + '"' + ((option.selected)?' selected="true"':'') + ' >' + option.label + '</option>';
+        });
+        this.$select.html(optionDOM);
+        this.rebuild4ajax();
+    }
+    /**
+     * Produces an ajax-based query function
+     *
+     * @param options object containing configuration paramters
+     * @param options.params parameter map for the transport ajax call, can contain such options as cache, jsonpCallback, etc. see $.ajax
+     * @param options.transport function that will be used to execute the ajax request. must be compatible with parameters supported by $.ajax
+     * @param options.url url for the data
+     * @param options.data a function(searchTerm, pageNumber, context) that should return an object containing query string parameters for the above url.
+     * @param options.dataType request data type: ajax, jsonp, other datatatypes supported by jQuery's $.ajax function or the transport function if specified
+     * @param options.quietMillis (optional) milliseconds to wait before making the ajaxRequest, helps debounce the ajax function if invoked too often
+     * @param options.results a function(remoteData, pageNumber) that converts data returned form the remote request to the format expected by Select2.
+     *      The expected format is an object containing the following keys:
+     *      results array of objects that will be used as choices
+     *      more (optional) boolean indicating whether there are more results available
+     *      Example: {results:[{id:1, text:'Red'},{id:2, text:'Blue'}], more:true}
+     */
+	    ,ajax : function (options) {
+	        var timeout, // current scheduled but not yet executed request
+	            handler = null,
+	            quietMillis = options.quietMillis || 500,
+	            ajaxUrl = options.url,
+	            self = this;
+	        return function (query) {
+	            window.clearTimeout(timeout);
+	            timeout = window.setTimeout(function () {
+	                var data = options.data, // ajax data function
+	                    url = ajaxUrl, // ajax url string or function
+	                    transport = options.transport || $.fn.multiselect.ajaxDefaults.transport,
+	                    // deprecated - to be removed in 4.0  - use params instead
+	                    deprecated = {
+	                        type: options.type || 'GET', // set type of request (GET or POST)
+	                        cache: options.cache || false,
+	                        jsonpCallback: options.jsonpCallback||undefined,
+	                        dataType: options.dataType||"json"
+	                    },
+	                    params = $.extend({}, $.fn.multiselect.ajaxDefaults.params, deprecated);
+	                data = data ? data.call(self, query.term) : null;
+	                url = (typeof url === 'function') ? url.call(self, query.term) : url;
+	
+	                if (handler) { handler.abort(); }
+	                if (options.params) {
+	                    if ($.isFunction(options.params)) {
+	                        $.extend(params, options.params.call(self));
+	                    } else {
+	                        $.extend(params, options.params);
+	                    }
+	                }
+	                
+	                error = options.errorHandler && $.isFunction(options.errorHandler ) ? options.errorHandler  : function(xhr, status, error){
+										var data = error;
+										if (_.isEqual('parsererror', status)) {
+											try {
+												var text = xhr.responseText;
+												var json = text.substring(0, text.lastIndexOf('<!--')-1);
+												data = JSON.parse(json);
+											} catch (e){
+												console.error("Error in ajax");
+											}
+										}
+									};
+	                $.extend(params, {
+	                    url: url,
+	                    dataType: options.dataType,
+	                    data: data,
+	                    success: function (data) {
+	                    	//console.log(data);
+	                    	var results = options.results(data);
+	                    	//console.log(options.results);
+	                    	//console.log(results);
+	                    	query.callback(results);
+	                      //console.log(data);
+	                    },
+	                    error: error
+	                });
+	                handler = transport.call(self, params);
+	            }, quietMillis);
+	        };
+	    }
+/*[GT]  -- */
     };
 
     $.fn.multiselect = function(option, parameter, extraOptions) {
@@ -1267,7 +1510,30 @@
             }
         });
     };
-
+/*[GT]  ++ */
+    $.fn.multiselect.ajaxDefaults = {
+        transport: $.ajax,
+        params: {
+            type: "GET",
+            cache: false,
+            dataType: "json"
+        }
+    };
+    $.fn.setCursorPosition = function(pos) {
+		  this.each(function(index, elem) {
+		    if (elem.setSelectionRange) {
+		      elem.setSelectionRange(pos, pos);
+		    } else if (elem.createTextRange) {
+		      var range = elem.createTextRange();
+		      range.collapse(true);
+		      range.moveEnd('character', pos);
+		      range.moveStart('character', pos);
+		      range.select();
+		    }
+		  });
+		  return this;
+		};
+/*[GT]  -- */
     $.fn.multiselect.Constructor = Multiselect;
 
     $(function() {
